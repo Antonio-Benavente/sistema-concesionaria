@@ -17,6 +17,7 @@
     "typescript": "^5.5.2"
   },
   "dependencies": {
+    "exppress": "^0.0.1-security",
     "express": "^4.19.2"
   }
 }
