@@ -7,6 +7,6 @@ export interface IAutos {
     color: string;
     precio: number;
     imagen: string;
-    disponibilidad: string;
+    disponibilidad: boolean;
     estadoAuditoria: string;
 }

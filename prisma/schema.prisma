@@ -1,0 +1,71 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model alquileres {
+  id_alquiler      Int             @id(map: "alquiler_pkey") @default(autoincrement())
+  id_usuario       Int
+  id_tipoDocumento Int
+  documento        String          @db.Char(15)
+  id_tipoBrevete   Int
+  brevete          String          @db.Char(9)
+  id_auto          Int
+  dias_alquilados  Int
+  precio           Decimal         @db.Decimal(10, 2)
+  estado_auditoria String          @default(dbgenerated("1")) @db.Char(1)
+  autos            autos           @relation(fields: [id_auto], references: [id_auto], onDelete: NoAction, onUpdate: NoAction, map: "fk_Autos")
+  tipo_brevetes    tipo_brevetes   @relation(fields: [id_tipoBrevete], references: [id_tipoBrevete], onDelete: NoAction, onUpdate: NoAction, map: "fk_TipoBrevete")
+  tipo_documentos  tipo_documentos @relation(fields: [id_tipoDocumento], references: [id_tipoDocumento], onDelete: NoAction, onUpdate: NoAction, map: "fk_TipoDocumento")
+  usuarios         usuarios        @relation(fields: [id_usuario], references: [id_usuario], onDelete: NoAction, onUpdate: NoAction, map: "fk_usuario")
+}
+
+model autos {
+  id_auto          Int          @id(map: "auto_pkey") @default(autoincrement())
+  matricula        String       @db.VarChar(6)
+  marca            String       @db.VarChar(100)
+  modelo           String       @db.VarChar(100)
+  fecha_creacion   DateTime     @db.Date
+  color            String       @db.VarChar(30)
+  imagen           String?      @db.VarChar(500)
+  disponibilidad   Boolean
+  estado_auditoria String       @default(dbgenerated("1")) @db.Char(1)
+  precio           Decimal      @db.Decimal(10, 2)
+  alquileres       alquileres[]
+}
+
+model roles {
+  id_rol           Int        @id(map: "rol_pkey") @default(autoincrement())
+  descripcion      String?    @db.VarChar(100)
+  estado_auditoria String     @default(dbgenerated("1")) @db.Char(1)
+  usuarios         usuarios[]
+}
+
+model tipo_brevetes {
+  id_tipoBrevete   Int          @id(map: "tipo_brevete_pkey") @default(autoincrement())
+  descripcion      String       @db.VarChar(4)
+  estado_auditoria String       @default(dbgenerated("1")) @db.Char(1)
+  alquileres       alquileres[]
+}
+
+model tipo_documentos {
+  id_tipoDocumento Int          @id(map: "tipo_documento_pkey") @default(autoincrement())
+  descripcion      String       @db.VarChar(100)
+  estado_auditoria String       @default(dbgenerated("1")) @db.Char(1)
+  alquileres       alquileres[]
+}
+
+model usuarios {
+  id_usuario       Int          @id(map: "usuario_pkey") @default(autoincrement())
+  nombre           String       @db.VarChar(100)
+  email            String       @db.VarChar(100)
+  password         String       @db.VarChar(100)
+  id_rol           Int
+  estado_auditoria String       @default(dbgenerated("1")) @db.Char(1)
+  alquileres       alquileres[]
+  roles            roles        @relation(fields: [id_rol], references: [id_rol], onDelete: NoAction, onUpdate: NoAction, map: "fk_rol")
+}
