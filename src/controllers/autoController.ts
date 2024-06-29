@@ -10,18 +10,24 @@ export const insertarAutos = async (req: Request, res: Response) => {
     try {
         const auto: IAutos = req.body;
         await prisma.autos.create({
-            data: {
-                matricula: auto.matricula,
-                marca: auto.marca,
-                modelo: auto.modelo,
-                fecha_creacion: auto.fecha_creacion,
-                color: auto.color,
-                precio: auto.precio,
-                imagen: auto.imagen,
-                disponibilidad: auto.disponibilidad
-            }
+            data: auto
         });
         res.status(200).json(ResponseModel.success(null, RESPONSE_INSERT_OK));
+    } catch (error) {
+        console.error(error.message);
+        res.status(500).json(ResponseModel.error(error.message));
+    }
+};
+
+export const listarAutos = async (res: Response) => {
+    console.log('autosController::insertarAutos');
+    try {
+        const autos = await prisma.autos.findMany({
+            where: {
+                estado_auditoria: '1'
+            }
+        });
+        res.status(200).json(ResponseModel.success(autos));
     } catch (error) {
         console.error(error.message);
         res.status(500).json(ResponseModel.error(error.message));

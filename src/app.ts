@@ -1,6 +1,5 @@
 import express, { Application } from 'express';
-
-//import perfilRoutes from './routes/perfilRoutes';
+import routesAuto from './routes/routesAuto';
 
 const app: Application = express();
 
@@ -11,6 +10,6 @@ app.use(express.json());
 
 
 //Routes
-//app.use('/api/v1/usuarios',usuarioRoutes);
+app.use('/api/v1/autos',routesAuto);
 
 export default app;
